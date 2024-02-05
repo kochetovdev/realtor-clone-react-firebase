@@ -19,22 +19,28 @@ const Header = () => {
         <div>
           <ul className="flex space-x-10">
             <li
-              className={`py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent cursor-pointer transition-colors ${
-                pathMatchRoute("/") && "text-black border-b-red-500"
+              className={`py-3 text-sm font-semibold border-b-[3px] cursor-pointer transition-colors ${
+                pathMatchRoute("/")
+                  ? "text-black border-b-red-500"
+                  : "text-gray-400 border-transparent"
               }`}
             >
               <Link to="/">Home</Link>
             </li>
             <li
-              className={`py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent cursor-pointer transition-colors ${
-                pathMatchRoute("/offers") && "text-black border-b-red-500"
+              className={`py-3 text-sm font-semibold border-b-[3px] cursor-pointer transition-colors ${
+                pathMatchRoute("/offers")
+                  ? "text-black border-b-red-500"
+                  : "text-gray-400 border-transparent "
               }`}
             >
               <Link to="/offers">Offers</Link>
             </li>
             <li
-              className={`py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent cursor-pointer transition-colors ${
-                pathMatchRoute("/signin") && "text-black border-b-red-500"
+              className={`py-3 text-sm font-semibold border-b-[3px] cursor-pointer transition-colors ${
+                pathMatchRoute("/signin")
+                  ? "text-black border-b-red-500"
+                  : "text-gray-400 border-transparent"
               }`}
             >
               <Link to="/signin">Sign In</Link>
