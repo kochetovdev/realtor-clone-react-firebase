@@ -48,10 +48,12 @@ const SignUp = () => {
         email,
         password
       );
-      auth?.currentUser &&
+
+      auth.currentUser &&
         updateProfile(auth.currentUser, {
           displayName: name,
         });
+
       const { user } = userCredential;
       const formDataCopy: FormDataAuth = { ...formData };
       delete formDataCopy.password;
