@@ -1,10 +1,14 @@
 import { ChangeEvent, useState } from "react";
 import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { toast } from "react-toastify";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const SignIn = () => {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -23,6 +27,23 @@ const SignIn = () => {
       [id]: value,
     }));
   };
+
+  const handleSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const auth = getAuth();
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      userCredentials.user && navigate("/");
+    } catch (error) {
+      toast.error("Bad user credentials");
+    }
+  };
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold">Sign In</h1>
@@ -35,7 +56,7 @@ const SignIn = () => {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={handleSubmit}>
             <input
               className="w-full mb-6 px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
               type="email"
