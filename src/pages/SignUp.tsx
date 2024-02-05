@@ -1,13 +1,24 @@
 import { ChangeEvent, useState } from "react";
 import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth";
+import { FormDataAuth, FormDataInitial } from "../types";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: "",
+  const [formData, setFormData] = useState<FormDataInitial>({
+    name: "",
     email: "",
     password: "",
   });
@@ -24,6 +35,35 @@ const SignUp = () => {
       [id]: value,
     }));
   };
+
+  const handleSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const { name, email, password } = formData;
+
+    try {
+      const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      auth?.currentUser &&
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        });
+      const { user } = userCredential;
+      const formDataCopy: FormDataAuth = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+      toast.success("Sign up was successfully");
+      navigate("/");
+    } catch (error) {
+      toast.error("Something went wrong with the registration");
+    }
+  };
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold">Sign Up</h1>
@@ -36,13 +76,13 @@ const SignUp = () => {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={handleSubmit}>
             <input
               className="w-full mb-6 px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
               type="text"
-              id="fullName"
-              placeholder="Full name"
-              value={formData.fullName}
+              id="name"
+              placeholder="Name"
+              value={formData.name}
               onChange={handleChange}
             />
             <input
