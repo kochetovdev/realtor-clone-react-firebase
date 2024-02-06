@@ -1,8 +1,23 @@
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const { pathname } = useLocation();
+  const [pageState, setPageState] = useState("Sign in");
+  const auth = getAuth();
+
   const pathMatchRoute = (route: string) => route === pathname;
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setPageState("Profile");
+      } else {
+        setPageState("Sign in");
+      }
+    });
+  }, [auth]);
 
   return (
     <article className="bg-white border-b shadow-md sticky top-0 z-50">
@@ -38,12 +53,12 @@ const Header = () => {
             </li>
             <li
               className={`py-3 text-sm font-semibold border-b-[3px] cursor-pointer transition-colors ${
-                pathMatchRoute("/signin")
+                pathMatchRoute("/signin") || pathMatchRoute("/profile")
                   ? "text-black border-b-red-500"
                   : "text-gray-400 border-transparent"
               }`}
             >
-              <Link to="/signin">Sign In</Link>
+              <Link to="/profile">{pageState}</Link>
             </li>
           </ul>
         </div>
