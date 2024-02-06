@@ -8,6 +8,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import RootLayout from "./RootLayout";
 import PrivateRoute from "./components/PrivateRoute";
+import CreateListing from "./pages/CreateListing";
 
 const clientRouter = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const clientRouter = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "forgot-password", element: <ForgotPassword /> },
       { path: "offers", element: <Offers /> },
+      { path: "create-listing", element: <CreateListing /> },
       {
         path: "profile",
         element: <PrivateRoute />,
