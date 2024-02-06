@@ -20,7 +20,7 @@ const Header = () => {
   }, [auth]);
 
   return (
-    <article className="bg-white border-b shadow-md sticky top-0 z-50">
+    <article className="bg-white border-b shadow-md sticky top-0 z-40">
       <header className="flex justify-between items-center p-3 max-w-7xl mx-auto">
         <div>
           <Link to="/">
